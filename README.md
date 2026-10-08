@@ -26,3 +26,6 @@ jobs:
         with:
           name: private-leads
           path: private_leads.csv
+
+
+pip install -r requirements.txt
