@@ -1,51 +1,36 @@
-name,phone
-John Smith,305-781-4821
-Michael Johnson,561-294-6775
-David Williams,727-845-1932
-Robert Brown,407-331-9588
-James Jones,954-771-4062
-Jennifer Garcia,239-663-8291
-Mary Miller,305-642-1186
-Patricia Davis,772-289-4317
-Linda Rodriguez,321-567-9834
-Barbara Martinez,813-332-7610
-Susan Hernandez,239-725-8849
-Jessica Lopez,954-474-2381
-Sarah Gonzalez,407-876-1203
-Karen Wilson,305-408-9752
-Nancy Anderson,561-677-5419
-Richard Taylor,727-198-4530
-Charles Thomas,941-539-7746
-Joseph Moore,321-813-4127
-Thomas Jackson,407-209-6645
-Christopher Martin,954-311-9981
-Amanda Clark,305-722-3458
-Ashley Lee,561-348-9124
-Emily Walker,239-571-6092
-Daniel Hall,813-456-2015
-Matthew Allen,407-829-3317
-Joshua Young,772-694-8513
-Olivia King,321-906-7485
-Emma Wright,954-622-1802
-Sophia Scott,305-344-7190
-Liam Green,561-131-7658
-Benjamin Baker,727-287-5009
-Lucas Adams,407-661-4930
-Mason Nelson,239-988-2143
-Jacob Carter,813-440-6721
-Noah Mitchell,321-581-7366
-Evelyn Perez,954-209-8542
-Harper Roberts,305-772-6014
-Isabella Turner,561-418-2907
-Charlotte Phillips,407-681-3039
-Ava Campbell,239-736-5958
-Mia Parker,727-503-1987
-Ella Evans,321-659-2228
-Grace Edwards,954-990-8449
-Chloe Collins,305-446-3227
-Nora Stewart,813-710-9438
-Hannah Sanchez,561-267-4941
-Layla Morris,407-932-5870
-Scarlett Rogers,239-486-1750
-Lily Reed,772-642-8018
-Aria Cook,321-774-2694
+name,phone,resort,location,annual_maintenance,monthly_maintenance,outstanding_loan_balance,months_behind,amount_due,reason_for_leaving,years_owned
+James Young,702-445-8291,WorldMark,Las Vegas NV,$1300,$108,$0,$0,$0,High maintenance costs,8
+Richard King,702-337-6745,Interval Leisure,Las Vegas NV,$1400,$117,$0,$0,$0,Family change,6
+Charles Baker,725-663-9182,Shell Vacations Club,Las Vegas NV,$1500,$125,$8400,$2,$250,Financial hardship,7
+Joshua Nelson,725-428-5031,Wyndham Timeshare,Las Vegas NV,$1900,$158,$12000,$0,$0,High maintenance costs,9
+Matthew Adams,725-771-4062,Orange Lake Resort,Las Vegas NV,$1700,$142,$9500,$1,$142,No longer using,5
+David Carter,702-594-3317,Bluegreen Vacations,Las Vegas NV,$1600,$133,$11200,$3,$400,Inherited unwanted,7
+Daniel Mitchell,702-881-7610,Marriott Villas,Las Vegas NV,$2800,$233,$24000,$0,$0,High maintenance costs,11
+Benjamin Perez,725-745-8849,Disney Vacation Club,Las Vegas NV,$3200,$267,$28000,$2,$534,Misrepresented,9
+Lucas Roberts,702-474-2381,Hilton Grand Vacations,Las Vegas NV,$2400,$200,$18500,$1,$200,Financial hardship,8
+Mason Turner,725-876-1203,Lake Tahoe Lodge,California,$2000,$167,$14200,$0,$0,High maintenance costs,6
+Jacob Phillips,702-408-9752,Diamond Resorts,California,$2200,$183,$16800,$2,$366,Family change,7
+Noah Campbell,725-677-5419,Westgate Resorts,California,$1800,$150,$12000,$4,$600,Months behind payments,9
+Liam Parker,702-198-4530,Marriott Villas,California,$2800,$233,$22000,$1,$233,High maintenance costs,12
+Oliver Evans,725-539-7746,Shell Vacations Club,Branson MO,$1500,$125,$7500,$0,$0,No longer using,5
+Ethan Edwards,702-813-4127,Wyndham Timeshare,Branson MO,$1900,$158,$10000,$3,$474,Financial hardship,6
+Alexander Collins,725-209-6645,Bluegreen Vacations,Branson MO,$1600,$133,$9200,$2,$266,Inherited unwanted,8
+Michael Stewart,702-311-9981,Orange Lake Resort,Branson MO,$1700,$142,$8500,$1,$142,High maintenance costs,7
+Daniel Sanchez,725-722-3458,Interval Leisure,Branson MO,$1400,$117,$6800,$0,$0,Family change,5
+Joseph Morris,702-348-9124,WorldMark,Las Vegas NV,$1300,$108,$5500,$5,$540,Months behind payments,10
+Thomas Rogers,725-571-6092,Sunterra,Las Vegas NV,$1200,$100,$0,$0,$0,High maintenance costs,9
+John Reed,702-456-2015,Shell Vacations Club,California,$1500,$125,$8900,$2,$250,Financial hardship,6
+Michael Cook,725-829-3317,Westgate Resorts,California,$1800,$150,$13000,$1,$150,No longer using,8
+David Adams,702-694-8513,Marriott Villas,California,$2800,$233,$25000,$3,$699,Misrepresented,11
+Robert King,725-906-7485,Diamond Resorts,California,$2200,$183,$17500,$0,$0,High maintenance costs,7
+James Lee,702-622-1802,Hilton Grand Vacations,Branson MO,$2400,$200,$19000,$2,$400,Family change,9
+Jennifer Walker,725-344-7190,Bluegreen Vacations,Branson MO,$1600,$133,$9800,$4,$532,Months behind payments,6
+Mary Hall,702-131-7658,Wyndham Timeshare,Las Vegas NV,$1900,$158,$11500,$1,$158,Financial hardship,8
+Patricia Allen,725-287-5009,Orange Lake Resort,California,$1700,$142,$10200,$0,$0,High maintenance costs,6
+Linda Young,702-661-4930,Lake Tahoe Lodge,California,$2000,$167,$15000,$3,$501,Inherited unwanted,7
+Barbara King,725-988-2143,Marriott Villas,Branson MO,$2800,$233,$23000,$2,$466,High maintenance costs,10
+Susan Nelson,702-736-5958,Disney Vacation Club,Las Vegas NV,$3200,$267,$29000,$0,$0,Family change,8
+Jessica Carter,725-503-1987,Interval Leisure,Las Vegas NV,$1400,$117,$6500,$5,$585,Months behind payments,9
+Sarah Mitchell,702-659-2228,Shell Vacations Club,Branson MO,$1500,$125,$8200,$1,$125,Financial hardship,5
+Karen Perez,725-990-8449,Westgate Resorts,Las Vegas NV,$1800,$150,$12500,$2,$300,High maintenance costs,7
+Nancy Roberts,702-446-3227,Bluegreen Vacations,California,$1600,$133,$9500,$0,$0,No longer using,6
