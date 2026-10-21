@@ -1,8 +1,4 @@
-No worries at all—let's get it un-bricked and working cleanly!
 
-Since the old file or something is conflicting, let's replace `scraper.py` with a bulletproof, clean version that runs without any parsing errors.
-
-### Paste this exact code into your `scraper.py` file:
 
 ```python
 import csv
