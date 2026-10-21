@@ -1,126 +1,107 @@
-import csv
+import os
 import re
 import time
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
-# Specific high-intent queries used by timeshare owners trying to exit
-TARGET_CONFIGS = [
-    {"query": "want to give away my timeshare contact phone email", "category": "Desperate Resale / Exit"},
-    {"query": "how to cancel timeshare contract contact email", "category": "Contract Cancellation Inquiry"},
-    {"query": "wyndham timeshare exit help phone email", "category": "Wyndham Owner Exit"},
-    {"query": "diamond resorts deed back contact email phone", "category": "Diamond Resorts Owner Exit"},
-    {"query": "westgate timeshare cancellation owner contact", "category": "Westgate Owner Exit"},
-    {"query": "timeshare user group buy sell exit contact email", "category": "TUG / Forum Resale Lead"}
+# Target sources & keywords for owner cancellation distress signals
+TARGET_FORUMS = [
+    {
+        "name": "TUG BBS - Timeshare Users Group",
+        "url": "https://tugbbs.com/forums/forums/buying-selling-renting-timeshares.13/",
+        "base_url": "https://tugbbs.com/forums/"
+    }
 ]
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept-Language": "en-US,en;q=0.9"
+    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Accept-Language": "en-US,en;q=0.5"
 }
 
-def extract_phone(text):
-    """Extract standard US phone numbers from snippet or string."""
-    match = re.search(r'\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}', text)
-    return match.group(0) if match else "N/A"
+KEYWORDS = ["exit", "cancel", "deed back", "cancellation", "surrender", "rescind", "relinquish", "developer back"]
 
-def extract_email(text):
-    """Extract email addresses from snippet or string."""
-    match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
-    return match.group(0) if match else "N/A"
+def extract_contact_info(text):
+    """Parses text for phone numbers and email addresses."""
+    emails = re.findall(r'[a-zA-Z0-9%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
+    phones = re.findall(r'\(?\b[2-9][0-9]{2}\)?[-. ]?[2-9][0-9]{2}[-. ]?[0-9]{4}\b', text)
+    
+    email = emails[0] if emails else "N/A"
+    phone = phones[0] if phones else "N/A"
+    return email, phone
 
-def run_timeshare_lead_extraction():
-    all_leads = []
-    seen_contacts = set()
+def identify_developer(text):
+    """Categorizes the lead by developer brand."""
+    text_upper = text.upper()
+    developers = ["WYNDHAM", "WESTGATE", "MARRIOTT", "DIAMOND", "HILTON", "HGV", "BLUEGREEN", "HOLIDAY INN", "HICV"]
+    for dev in developers:
+        if dev in text_upper:
+            return dev
+    return "GENERAL/OTHER"
 
-    print("Starting high-intent Timeshare Exit lead extraction...")
+def run_scraper():
+    leads = []
+    print("[*] Starting Timeshare Exit Lead Scraper...")
 
-    for config in TARGET_CONFIGS:
-        query_str = f"https://html.duckduckgo.com/html/?q={config['query'].replace(' ', '+')}"
-        
+    for forum in TARGET_FORUMS:
         try:
-            response = requests.get(query_str, headers=HEADERS, timeout=12)
+            response = requests.get(forum["url"], headers=HEADERS, timeout=15)
             if response.status_code != 200:
+                print(f"[!] Failed to access {forum['name']} (Status: {response.status_code})")
                 continue
 
-            soup = BeautifulSoup(response.text, "html.parser")
-            results = soup.find_all("div", class_="result__body")
+            soup = BeautifulSoup(response.text, 'html.parser')
+            threads = soup.find_all('div', class_='structItem-title')
 
-            for item in results:
-                title_elem = item.find("a", class_="result__a")
-                snippet_elem = item.find("a", class_="result__snippet")
-
-                if not title_elem or not snippet_elem:
+            for thread in threads:
+                a_tag = thread.find('a', href=True)
+                if not a_tag:
                     continue
+                
+                title = a_tag.text.strip()
+                link = forum["base_url"] + a_tag['href'].lstrip('/')
 
-                title = title_elem.text.strip()
-                link = title_elem["href"]
-                snippet = snippet_elem.text.strip()
-
-                phone = extract_phone(snippet)
-                email = extract_email(snippet)
-
-                # Focus on entries that have usable contact info or direct owner inquiries
-                unique_key = phone if phone != "N/A" else (email if email != "N/A" else title)
-                if unique_key in seen_contacts:
-                    continue
-
-                seen_contacts.add(unique_key)
-                all_leads.append({
-                    "Lead Category": config['category'],
-                    "Listing / Lead Title": title,
-                    "Phone Number": phone,
-                    "Email Address": email,
-                    "Source Link": link,
-                    "Owner Inquiry Snippet": snippet[:200] + "..." if len(snippet) > 200 else snippet
-                })
-
-            time.sleep(1) # Rate limit protection
+                # Check if thread title matches high-intent keywords
+                if any(kw in title.lower() for kw in KEYWORDS):
+                    print(f"[+] High-intent match found: {title}")
+                    
+                    try:
+                        time.sleep(1) # Polite delay
+                        t_res = requests.get(link, headers=HEADERS, timeout=10)
+                        t_soup = BeautifulSoup(t_res.text, 'html.parser')
+                        
+                        first_post = t_soup.find('div', class_='message-inner')
+                        post_text = first_post.text.strip() if first_post else title
+                        
+                        email, phone = extract_contact_info(post_text)
+                        developer = identify_developer(post_text + " " + title)
+                        
+                        leads.append({
+                            "Source": forum["name"],
+                            "Developer": developer,
+                            "Title/Intent": title,
+                            "Email": email,
+                            "Phone": phone,
+                            "Link": link,
+                            "Scraped_Date": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
+                        })
+                    except Exception as e:
+                        print(f"[!] Error parsing thread {link}: {e}")
 
         except Exception as e:
-            print(f"Error scraping timeshare query '{config['query']}': {e}")
+            print(f"[!] Error fetching {forum['name']}: {e}")
 
-    # Backup sample structured entries in case public search blocks active queries
-    if not all_leads:
-        all_leads = [
-            {
-                "Lead Category": "Wyndham Owner Exit",
-                "Listing / Lead Title": "Looking to exit Wyndham Grand Desert - Urgent",
-                "Phone Number": "(702) 555-0133",
-                "Email Address": "owner_exit_nv@gmail.com",
-                "Source Link": "https://tugbbs.com/forums/threads/wyndham-exit-inquiry",
-                "Owner Inquiry Snippet": "Owner seeking full exit / deed transfer assistance due to rising annual maintenance fees."
-            },
-            {
-                "Lead Category": "Westgate Owner Exit",
-                "Listing / Lead Title": "Westgate Las Vegas Owner Wanting Contract Cancellation",
-                "Phone Number": "(702) 555-0188",
-                "Email Address": "cancel_westgate_lead@yahoo.com",
-                "Source Link": "https://timeshareusersgroup.com/classifieds",
-                "Owner Inquiry Snippet": "Paid off contract, looking to surrender or transfer deed back immediately."
-            }
-        ]
-
-    return all_leads
-
-def main():
-    leads = run_timeshare_lead_extraction()
-    filename = "private_leads.csv"
-    fieldnames = [
-        "Lead Category", 
-        "Listing / Lead Title", 
-        "Phone Number", 
-        "Email Address", 
-        "Source Link", 
-        "Owner Inquiry Snippet"
-    ]
-
-    with open(filename, mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(leads)
-
-    print(f"Successfully generated {len(leads)} timeshare exit leads in {filename}")
+    # Output results to CSV
+    output_file = "private_leads.csv"
+    if leads:
+        df = pd.DataFrame(leads)
+        df.to_csv(output_file, index=False)
+        print(f"[✓] Successfully exported {len(leads)} leads to {output_file}")
+    else:
+        # Create empty structured file to avoid step failure in Github Actions
+        df = pd.DataFrame(columns=["Source", "Developer", "Title/Intent", "Email", "Phone", "Link", "Scraped_Date"])
+        df.to_csv(output_file, index=False)
+        print("[!] No new leads found. Created blank structure for private_leads.csv")
 
 if __name__ == "__main__":
-    main()
+    run_scraper()
