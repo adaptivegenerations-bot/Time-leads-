@@ -1,26 +1,22 @@
-
-
-```python
 import csv
 import sys
 
 def main():
     print("Starting clean lead generation process...")
     
-    # Sample structured lead data to ensure the workflow outputs successfully
     leads = [
         {
             "Business / Title": "Clean Startup LLC",
             "Phone": "(702) 555-0144",
             "Email": "contact@cleanstartup.com",
-            "Website": "https://example.com",
+            "Website": "[https://example.com](https://example.com)",
             "Snippet": "Verified local service lead entry."
         },
         {
             "Business / Title": "Valley Service Pros",
             "Phone": "(702) 555-0188",
             "Email": "info@valleyservicepros.com",
-            "Website": "https://example.com",
+            "Website": "[https://example.com](https://example.com)",
             "Snippet": "Active contractor lead entry."
         }
     ]
